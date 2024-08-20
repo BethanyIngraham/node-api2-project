@@ -33,5 +33,24 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.post('/', async (req, res) => {
+    try{
+        const {title, contents} = req.body
+        if(!title || !contents){
+            res.status(400).json({
+                message: 'Please provide title and contents for the post'
+            })
+        }else{
+            const createdPostId = await Posts.insert({title, contents})
+            const {id} = createdPostId 
+            const createdPost = await Posts.findById(id)
+            res.status(201).json(createdPost)
+        }
+    }catch(err){
+        res.status(500).json({
+            message: 'The post information could not be retrieved'
+        })
+    }
+})
 
 module.exports = router
