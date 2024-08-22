@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
         }
     }catch(err){
         res.status(500).json({
-            message: 'The post information could not be retrieved'
+            message: 'There was an error while saving the post to the database'
         })
     }
 })
@@ -101,6 +101,26 @@ router.delete('/:id', async (req, res) => {
     }catch(err){
         res.status(500).json({
             message: 'The post could not be removed'
+        })
+    }
+})
+
+router.get('/:id/comments', async (req, res) => {
+    try{
+        const {id} = req.params
+        const post = await Posts.findById(id)
+        if(!post){
+            res.status(404).json({
+                message: 'The post with the specified ID does not exist'
+            })
+        }else{
+        const {id} = req.params
+        const postComments = await Posts.findPostComments(id)  
+        res.status(200).json(postComments) 
+        } 
+    }catch(err){
+        res.status(500).json({
+            message: 'The comments information could not be retrieved'
         })
     }
 })
